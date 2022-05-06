@@ -47,9 +47,9 @@ class UsersApi(Resource):
             return resp
         else:
             return {'message': 'received'}
-    def delete_comment(self):
+    def delete(self):
         resp = mongo.db.prova.delete_one( { "_id": ObjectId("6274ed1cc8f6c95a70e9902e") } )
-        return Response(resp, mimetype = 'application/json') 
+        return Response(resp.deleted_count, mimetype = 'application/json') 
 api.add_resource(UsersApi, '/users')
 
 
