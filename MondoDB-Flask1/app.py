@@ -1,52 +1,57 @@
 from flask import Flask , request, jsonify, Response
 from flask_restful import Resource , Api ,reqparse
 from flask_cors import CORS
+from bson import json_util
 import pandas as pd
+
 from flask_pymongo import PyMongo
 
-app = Flask(__name__)
-app.config["MONGO_URI"] = 'mongodb://Livera2003:Waduge78&@cluster0-shard-00-00.uylmr.mongodb.net:27017,cluster0-shard-00-01.uylmr.mongodb.net:27017,cluster0-shard-00-02.uylmr.mongodb.net:27017/Livera1?ssl=true&replicaSet=atlas-38dmxu-shard-0&authSource=admin&retryWrites=true&w=majority'
+app = Flask(__name__ )
+
+app.config["MONGO_URI"] = "mongodb://Emanuele-Visioli:EMAnuele25102004@cluster0-shard-00-00.x7fma.mongodb.net:27017,cluster0-shard-00-01.x7fma.mongodb.net:27017,cluster0-shard-00-02.x7fma.mongodb.net:27017/Sanita?ssl=true&replicaSet=atlas-566dc8-shard-0&authSource=admin&retryWrites=true&w=majority" #bisogna anche specificare il nome del database al interno del link 
+
 mongo = PyMongo(app)
+
 CORS(app)
 api = Api(app)
 
+
+#-------------------------------------------------------------------------------------------------------------------Prova
+
 class UsersApi(Resource):
-    def get(self):
-        uss = mongo.db.testdata.find()
-        resp = json_util.dumps(uss)
-        return Response(resp, mimetype = 'application/json') 
-    '''def post(self):
+    #def get(self):
+    #    uss = mongo.db.medici_medicina_generale.find()
+    #    resp = json_util.dumps(uss)
+    #    return Response(resp, mimetype = 'application/json') 
+    def post(self):
         user = request.json["user"]
-        nome = request.json["nome"]
-        cognome = request.json["cognome"]
-        telefono = request.json["telefono"]
-        email = request.json["email"]
-        data = request.json["data"]
-        if user and nome and cognome and telefono and email and data:
-            id = mongo.db.testdata.insert_one(
+        informatica = request.json["informatica"]
+        matematica = request.json["matematica"]
+        arte = request.json["arte"]
+        if user and informatica and matematica and arte:
+            id = mongo.db.Prova1.insert_one(
                 {
                 'user': user,
-                'nome': nome,
-                'cognome': cognome,
-                'telefono': telefono,
-                'email':email,
-                'data':data
+                'informatica': informatica,
+                'matematica': matematica,
+                'arte': arte 
                 }
             )
             resp = {
                 "id" : str(id),
                 'user': user,
-                'nome': nome,
-                'cognome': cognome,
-                'telefono': telefono,
-                'email':email,
-                'data':data
+                'informatica': informatica,
+                'matematica': matematica,
+                'arte': arte 
             }
             return resp
         else:
-            return {'message': 'received'}'''
+            return {'message': 'received'}
+    def delete_comment(self):
+        resp = mongo.db.prova.delete_one( { "_id": ObjectId("6274ed1cc8f6c95a70e9902e") } )
+        return Response(resp, mimetype = 'application/json') 
+api.add_resource(UsersApi, '/users')
 
-api.add_resource(UsersApi, '/appuntamenti')
 
 
 if __name__ == '__main__':
